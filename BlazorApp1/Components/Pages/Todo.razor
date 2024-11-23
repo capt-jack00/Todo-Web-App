@@ -3,31 +3,81 @@
 
 <PageTitle>Todo</PageTitle>
 
-<h1>Todo (@todos.Count(todo => !todo.isDone))</h1>
-
+<h1>Todo List</h1>
+<h2>Undone tasks: (@todos.Count(todo => !todo.isDone))</h2>
 <ul>
+    @* <label style="display: flex; margin-left: 70px; margin-right: 0;">Task name</label>
+    <label style="display: flex; margin-left: 70px;">Task description</label> *@
+
+
     @foreach (var todo in todos)
     {
+        
         <li>
-            <input type="checkbox" @bind="todo.isDone" />
-            <input @bind="todo.Title" />
+            Done:
+            <input class="checkboxIsDone" type="checkbox" @bind="todo.isDone" />
+            <input placeholder="Task Title" class="todoLabelEdit" @bind="todo.Title" />
+            <input placeholder="Task Description" class="todoLabelEdit" @bind="todo.Desc" />
         </li>
     }
 </ul>
 
-<input placeholder="Something todo" @bind="newTodo" />
-<button @onclick="AddTodo">Add todo</button>
+<input class="todoLabelEdit" placeholder="Something todo" @bind="newTodo" /><br>
+<input class="todoLabelEdit" type="text" placeholder="Short description" @bind="newDesc"/><br>
+<button class="addTodoButton" @onclick="AddTodo">Add todo</button><br>
+
+<style>
+    .todoLabelEdit{
+        margin: 5px;
+    }
+
+    .todoLabelEdit:hover{
+        scale: 1.2;
+        transition: all 0.3s ease;
+    }
+
+    .addTodoButton{
+        background-color: rgb(0, 13, 255);
+        border-radius: 5px;
+        border: none;
+        margin-left: 5px;
+        color:aliceblue;
+    }
+
+    .addTodoButton:hover{
+        scale: 1.2;
+        transition: all 0.3s ease;
+    }
+
+    .addTodoButton:hover:after{
+        transition: all 0.3s ease-out;
+        scale: 1;
+    }
+
+    .checkboxIsDone:hover{
+        transition: all 0.3s ease-out;
+        scale: 1;
+    }
+
+</style>
 
 @code {
     private List<TodoItem> todos = new();
     private string? newTodo;
+    private string? newDesc;
 
     private void AddTodo()
     {
         if (!string.IsNullOrWhiteSpace(newTodo))
         {
-            todos.Add(new TodoItem { Title = newTodo });
+            todos.Add(new TodoItem { Title = newTodo, Desc = newDesc});
             newTodo = string.Empty;
+            newDesc = string.Empty;
+        }   
+        else
+        {
+            todos.Add(new TodoItem {Title = "No Title"});
         }
     }
 }
+
